@@ -3,44 +3,57 @@ import React , { useState } from "react";
 
 const page = () => {
 
-  const[title , setTitle] = useState("");
-  const[desc , setDesc] = useState("");
-  const[mainTask , setMainTask] = useState([]);
+  const[todo , setTodo] = useState("");
+  // const[desc , setDesc] = useState("");
+  const[todos , setTodos] = useState([]);
 
   const submitHandler = (e) => {
    e.preventDefault();
-   setMainTask([...mainTask,{title , desc}]);
-   setTitle("");
-   setDesc("");
-   console.log(mainTask);
+
+   const newTodo = {
+      id : new Date().getTime(),
+      text: todo, 
+      completed : false,
+   }
+
+   setTodos([...todos].concat(newTodo));
+   setTodo("");
+  //  setDesc("");
   }
 
-  const deleteHandler = (index) => {
-     let copyTask = [...mainTask];
-     copyTask.splice(index,1);
-     setMainTask(copyTask);
+  const deleteHandler = (id) => {
+     let copyTask = [...todos].filter((todo) => todo.id !== id)
+
+     setTodos(copyTask);
+  }
+
+  const toggleComplete = (id) => {
+      const updatedTodos = [...todos].map((todo) => {
+        if(todo.id === id){
+          todo.completed = !todo.completed
+        }
+        return todo
+      })
+
+      setTodos(updatedTodos)
   }
 
   let renderTask = <h2>No task Available</h2>
 
-  if(mainTask.length > 0){
-      renderTask = mainTask.map((task , index) => {
+  if(todos.length > 0){
+      renderTask = todos.map((todo) => {
         return (
-          <li key={index}>
+          <li key={todo.id}>
           <div className="flex justify-between items-center mb-4">
-            <h1>{index+1}</h1>
-            <h3 className="text-1xl font-thin">{task.title}</h3>
-            <h4 className="text-1xl font-thin">{task.desc}</h4>
+            {/* <h1>{todo.id}</h1> */}
+            <h3 className="text-1xl font-semibold">{todo.text}</h3>
+            {/* <h4 className="text-1xl font-semibold">{task.desc}</h4> */}
             <button className="bg-red-500 p-4 rounded-lg text-white"
             onClick={() => {
-              deleteHandler(index)
+              deleteHandler(todo.id)
             }}
             >Delete</button>
-            <button className="bg-blue-500 p-4 rounded-lg text-white"
-             onClick={() => {
-              taskDoneHandler(index)
-             }}
-            >Mark As Done</button>
+            <input type="checkbox" onChange={() => {toggleComplete(todo.id)}} checked={todo.completed}/>
           </div> 
         </li>
         )
@@ -53,17 +66,17 @@ const page = () => {
         <div className="flex flex-col justify-center items-center">
             <form onSubmit={submitHandler}>
                 <input type='text' placeholder='Enter yout task' className='p-4 m-4 border-none bg-slate-200 rounded-lg'
-                value={title}
+                value={todo}
                 onChange={(e) => {
-                  setTitle(e.target.value);
+                  setTodo(e.target.value);
                 }}
                 />
-                <input type='text' placeholder='Enter task description' className='p-4 m-4 border-none bg-slate-200 rounded-lg'
+                {/* <input type='text' placeholder='Enter task description' className='p-4 m-4 border-none bg-slate-200 rounded-lg'
                 value={desc}
                 onChange={(e) => {
                   setDesc(e.target.value);
                 }}
-                />
+                /> */}
                 <button className='bg-green-500 p-3 text-white rounded-md hover:bg-green-400'>Add Task</button>
             </form>
         </div>
