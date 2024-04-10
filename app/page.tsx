@@ -1,12 +1,30 @@
 "use client"
-import React , { useState } from "react";
+import React , { useEffect, useState } from "react";
+
+
+//function to retrieve data from local storage
+const getLocalItems = () => {
+  
+  let tasks = localStorage.getItem("mytodos");
+
+  if(tasks){
+    return JSON.parse(tasks);
+  }else{
+    return [];
+  }
+}
 
 const page = () => {
 
   const[todo , setTodo] = useState("");
-  // const[desc , setDesc] = useState("");
-  const[todos , setTodos] = useState([]);
+  const[todos , setTodos] = useState(getLocalItems());
 
+  //storing data in local storage  
+  useEffect(() => {
+    localStorage.setItem("mytodos" , JSON.stringify(todos));
+  } , [todos])
+
+  
   const submitHandler = (e) => {
    e.preventDefault();
 
@@ -15,11 +33,9 @@ const page = () => {
       text: todo, 
       completed : false,
    }
-
    setTodos([...todos].concat(newTodo));
    setTodo("");
-  //  setDesc("");
-  }
+}
 
   const deleteHandler = (id) => {
      let copyTask = [...todos].filter((todo) => todo.id !== id)
@@ -45,11 +61,9 @@ const page = () => {
         return (
           <li key={todo.id}>
           <div className="flex justify-between items-center mb-4">
-            {/* <h1>{todo.id}</h1> */}
             <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
               {todo.text}
             </span>
-            {/* <h4 className="text-1xl font-semibold">{task.desc}</h4> */}
             <div className="buttons">
                 <button className="bg-red-500 p-4 rounded-lg text-white"
                 onClick={() => {
@@ -82,12 +96,6 @@ const page = () => {
                   setTodo(e.target.value);
                 }}
                 />
-                {/* <input type='text' placeholder='Enter task description' className='p-4 m-4 border-none bg-slate-200 rounded-lg'
-                value={desc}
-                onChange={(e) => {
-                  setDesc(e.target.value);
-                }}
-                /> */}
                 <button className='bg-green-500 p-3 text-white rounded-md hover:bg-green-400'>Add Task</button>
             </form>
         </div>
