@@ -46,14 +46,25 @@ const page = () => {
           <li key={todo.id}>
           <div className="flex justify-between items-center mb-4">
             {/* <h1>{todo.id}</h1> */}
-            <h3 className="text-1xl font-semibold">{todo.text}</h3>
+            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+              {todo.text}
+            </span>
             {/* <h4 className="text-1xl font-semibold">{task.desc}</h4> */}
-            <button className="bg-red-500 p-4 rounded-lg text-white"
-            onClick={() => {
-              deleteHandler(todo.id)
-            }}
-            >Delete</button>
-            <input type="checkbox" onChange={() => {toggleComplete(todo.id)}} checked={todo.completed}/>
+            <div className="buttons">
+                <button className="bg-red-500 p-4 rounded-lg text-white"
+                onClick={() => {
+                  deleteHandler(todo.id)
+                }}
+                >Delete</button>
+                <label>
+                    <input type="checkbox" onChange={() => {toggleComplete(todo.id)}} checked={todo.completed}
+                    id="check" className="hidden"
+                    />
+                    <button onClick={() => {
+                      toggleComplete(todo.id)
+                    }} className="bg-blue-500 p-4 rounded-lg text-white ml-2">Mark As Done</button>
+                </label>
+            </div>
           </div> 
         </li>
         )
@@ -82,7 +93,7 @@ const page = () => {
         </div>
      <hr/>
      <div className="p-8 bg-slate-400 ">
-         <ul>
+         <ul className="render-task">
            {renderTask}
          </ul>
      </div>
