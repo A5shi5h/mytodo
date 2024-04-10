@@ -1,5 +1,7 @@
 "use client"
 import React , { useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleCheck, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 
 //function to retrieve data from local storage
@@ -61,22 +63,24 @@ const page = () => {
         return (
           <li key={todo.id}>
           <div className="flex justify-between items-center mb-4">
-            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }} className="bg-slate-500 p-4 rounded-lg font-semibold">
               {todo.text}
             </span>
             <div className="buttons">
-                <button className="bg-red-500 p-4 rounded-lg text-white"
+                <button className="bg-red-500 p-4 rounded-lg text-white hover:bg-red-400"
                 onClick={() => {
                   deleteHandler(todo.id)
                 }}
-                >Delete</button>
+                ><FontAwesomeIcon icon={faTrash} /></button>
                 <label>
                     <input type="checkbox" onChange={() => {toggleComplete(todo.id)}} checked={todo.completed}
                     id="check" className="hidden"
                     />
                     <button onClick={() => {
                       toggleComplete(todo.id)
-                    }} className="bg-blue-500 p-4 rounded-lg text-white ml-2">Mark As Done</button>
+                    }} className="bg-blue-500 p-4 rounded-lg text-white ml-2 hover:bg-blue-400">
+                      <FontAwesomeIcon icon={faCircleCheck}/>
+                    </button>
                 </label>
             </div>
           </div> 
@@ -87,7 +91,7 @@ const page = () => {
 
   return (
     <>
-     <h1 className='text-center text-3xl p-4 font-serif bg-black text-white'>My Todo List</h1>
+     <h1 className='text-center text-3xl p-6 font-serif bg-black text-white m-8 rounded-lg w-1/2 ml-[390px]'>My Todo List</h1>
         <div className="flex flex-col justify-center items-center">
             <form onSubmit={submitHandler}>
                 <input type='text' placeholder='Enter yout task' className='p-4 m-4 border-none bg-slate-200 rounded-lg'
@@ -100,8 +104,8 @@ const page = () => {
             </form>
         </div>
      <hr/>
-     <div className="p-8 bg-slate-400 ">
-         <ul className="render-task">
+     <div className="p-8 bg-slate-400 m-10 rounded-lg border border-black">
+         <ul>
            {renderTask}
          </ul>
      </div>
