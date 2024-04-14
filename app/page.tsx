@@ -5,29 +5,35 @@ import { faCircleCheck, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 
 //function to retrieve data from local storage
-const getLocalItems = () => {
+const getTodoItems = () => {
   
-  let tasks = localStorage.getItem("mytodos");
+  if(typeof window !== 'undefined'){
 
-  if(tasks){
-    return JSON.parse(tasks);
+    let tasks = localStorage.getItem("mytodos");
+
+    if(tasks){
+      return JSON.parse(tasks);
+    }else{
+      return [];
+    }
   }else{
     return [];
-  }
+  } 
 }
 
 const page = () => {
 
   const[todo , setTodo] = useState("");
-  const[todos , setTodos] = useState(getLocalItems());
+  const[todos , setTodos] = useState(getTodoItems());
 
+  
   //storing data in local storage  
   useEffect(() => {
     localStorage.setItem("mytodos" , JSON.stringify(todos));
   } , [todos])
 
   
-  const submitHandler = (e) => {
+  const submitHandler = (e: { preventDefault: () => void; }) => {
    e.preventDefault();
 
    const newTodo = {
@@ -39,13 +45,13 @@ const page = () => {
    setTodo("");
 }
 
-  const deleteHandler = (id) => {
+  const deleteHandler = (id: any) => {
      let copyTask = [...todos].filter((todo) => todo.id !== id)
 
      setTodos(copyTask);
   }
 
-  const toggleComplete = (id) => {
+  const toggleComplete = (id: any) => {
       const updatedTodos = [...todos].map((todo) => {
         if(todo.id === id){
           todo.completed = !todo.completed
@@ -59,7 +65,7 @@ const page = () => {
   let renderTask = <h2>No task Available</h2>
 
   if(todos.length > 0){
-      renderTask = todos.map((todo) => {
+      renderTask = todos.map((todo: { id: React.Key | null | undefined; completed: boolean | undefined; text: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => {
         return (
           <li key={todo.id}>
           <div className="flex justify-between items-center mb-4">
@@ -91,7 +97,7 @@ const page = () => {
 
   return (
     <>
-     <h1 className='text-center text-3xl p-6 font-serif bg-black text-white m-8 rounded-lg w-1/2 ml-[390px]'>My Todo List</h1>
+     <h1 className='text-center text-3xl p-6 font-serif bg-black text-white m-8 rounded-lg w-1/2 ml-[350px]'>My Todo List</h1>
         <div className="flex flex-col justify-center items-center">
             <form onSubmit={submitHandler}>
                 <input type='text' placeholder='Enter yout task' className='p-4 m-4 border-none bg-slate-200 rounded-lg'
